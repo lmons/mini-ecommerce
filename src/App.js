@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { fetchProducts } from './services/api';
+import Product from './components/Product';
 import './App.css';
 
 function App() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts().then(response => {
+      setProducts(response.data);
+    });
+  }, []);
+
+  const handleAddToCart = product => {
+    console.log('Adding to cart:', product);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Mini E-commerce Product Gallery</h1>
+      <div className="product-list">
+        {products.map(product => (
+          <Product key={product.id} product={product} onAddToCart={handleAddToCart} />
+        ))}
+      </div>
     </div>
   );
 }
